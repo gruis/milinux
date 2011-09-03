@@ -2,6 +2,8 @@
 
 # Assumes that you have a disk (/dev/sdb) mounted under /mnt that you want to
 # turn into a clone of running machine.
+# @see http://www.linuxfromscratch.org/lfs/view/stable/part3.html
+# @see http://www.linuxfromscratch.org/lfs/view/stable/chapter08/grub.html
 
 mkdir -pv /mnt/{bin,boot,etc/opt,home,lib,mnt,opt}
 mkdir -pv /mnt/{media/{floppy,cdrom},sbin,srv,var}
