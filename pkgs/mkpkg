@@ -17,7 +17,7 @@ done
 
 if [ -a "$CWD/../$PKGNAME-postinst.sh" ]; then
   echo "copying post install script '$PKGNAME-postinst.sh'"
-  cp -v /sources/$PKGNAME-postinst.sh postinst.sh
+  cp -v $CWD/../$PKGNAME-postinst.sh postinst.sh
   chmod +x postinst.sh
 fi
 
