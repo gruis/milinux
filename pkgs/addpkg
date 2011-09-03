@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+if [[ -r $1 ]]; then
+  echo "examining $1"
+  if [[ `echo $1 | rev | cut -d "-" -f 1 | rev` == "pkg.tar.bz2" ]]; then
+    echo "installing $1";
+  else
+    echo "$1 is not a package";
+    exit 1;
+  fi
+else
+  echo "a package must be specified"
+  exit 1;
+fi
+
+
+CWD=`pwd`
+
+cd /
+tar xf $1
+
+if [ -a "/postinst.sh" ]; then
+  echo "a post install script was found";
+  if [[ -x "/postinst.sh" ]]; then
+    echo "running it";
+    ./postinst.sh
+    rm postinst.sh
+  else
+    echo "/postinst.sh is not executable; it will not be deleted"
+    exit 1;
+  fi
+fi
+
+cd $CWD

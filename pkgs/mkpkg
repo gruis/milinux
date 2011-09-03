@@ -1,0 +1,35 @@
+#!/bin/bash
+
+PKGNAME=`pwd | rev | cut -d '/' -f 1 | rev`
+FAKEROOT=/usr/fakeroot/$PKGNAME
+CWD=`pwd`
+echo "building $PKGNAME in '$FAKEROOT'"
+
+mkdir -p $FAKEROOT
+make DESTDIR=$FAKEROOT install
+
+cd $FAKEROOT
+
+echo '#!/bin/bash' > ../$PKGNAME-uninst.sh
+for I in `find .`; do
+  echo rm -v $I >> ../$PKGNAME-uninst.sh
+done
+
+if [ -a "$CWD/../$PKGNAME-postinst.sh" ]; then
+  echo "copying post install script '$PKGNAME-postinst.sh'"
+  cp -v /sources/$PKGNAME-postinst.sh postinst.sh
+  chmod +x postinst.sh
+fi
+
+tar -cjf ../$PKGNAME-pkg.tar.bz2 .
+
+find ./{,usr/}{bin,lib,sbin} -type f -exec strip --strip-debug '{}' ';'
+find ./{,usr/}{bin,sbin} -type f -exec strip --strip-all --strip-debug '{}' ';'
+tar -cjf ../$PKGNAME-stripped-pkg.tar.bz2 .
+
+cd ..
+rm -rf $PKGNAME
+
+unset PKGNAME
+unset FAKEROOT
+cd $CWD
